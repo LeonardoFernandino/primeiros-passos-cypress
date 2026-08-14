@@ -17,7 +17,7 @@ describe('Orange HRM Tests', () => {
     GenericDateField: '[placeholder="yyyy-dd-mm"]',
     dateCloseField: '.--close',
     NacionalityField: '.oxd-select-text-input',
-    BotonSave: '[type="submit"]'
+    SaveButton: '[type="submit"]'
   }
   
   it.only('User Info Update - Success', () => {
@@ -42,7 +42,7 @@ describe('Orange HRM Tests', () => {
     cy.get(selectorList.NacionalityField).eq(0).click().get('[role="option"]').contains('Brazilian').click()
     cy.get(selectorList.GenericDateField).eq(1).clear().type('2000-09-12')
     cy.get(selectorList.dateCloseField).click()
-    cy.get(selectorList.BotonSave).eq(0).click()
+    cy.get(selectorList.SaveButton).eq(0).click()
     cy.get('body').should('contain', 'Successfully Updated')
   })
   it('Login - Fail', () => {
