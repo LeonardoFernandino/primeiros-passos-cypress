@@ -16,8 +16,17 @@ describe('Orange HRM Tests', () => {
     GenericField: '.oxd-input--active',
     GenericDateField: '[placeholder="yyyy-dd-mm"]',
     dateCloseField: '.--close',
-    NacionalityField: '.oxd-select-text-input',
-    SaveButton: '[type="submit"]'
+    RegistrationDetailsField: '[clear="false"]',
+    SaveButton: '[type="submit"]',
+    
+    // Custom Fields
+    CustomField: '.oxd-select-text-input',
+    Test_field: '[options=""]',
+
+    // Attachments
+    AddAttachmentButton: '.oxd-button--text',
+    AttachmentCommentField: '.oxd-textarea',
+    AttachmentSaveButton: '.oxd-button',
   }
   
   it.only('User Info Update - Success', () => {
@@ -39,12 +48,27 @@ describe('Orange HRM Tests', () => {
     cy.get(selectorList.GenericField).eq(5).clear().type(736843)
     cy.get(selectorList.GenericDateField).eq(0).clear().type('2030-05-23')
     cy.get(selectorList.dateCloseField).click()
-    cy.get(selectorList.NacionalityField).eq(0).click()
+    cy.get(selectorList.RegistrationDetailsField).eq(0).click()
     cy.get('[role="option"]').contains('Brazilian').click()
+    cy.get(selectorList.RegistrationDetailsField).eq(1).click()
+    cy.get('[role="option"]').contains('Married').click()
     cy.get(selectorList.GenericDateField).eq(1).clear().type('2000-09-12')
     cy.get(selectorList.dateCloseField).click()
     cy.get(selectorList.SaveButton).eq(0).click()
     cy.get('body').should('contain', 'Successfully Updated')
+
+    // Custom Fields
+    cy.get(selectorList.CustomField).eq(2).click()
+    cy.get('[role="option"]').contains('A-').click()
+    cy.get(selectorList.Test_field).clear().type(762)
+    cy.get(selectorList.SaveButton).eq(1).click()
+    cy.get('body').should('contain', 'Successfully Updated')
+
+    // Attachments
+    cy.get(selectorList.AddAttachmentButton).click()
+    cy.get(selectorList.AttachmentCommentField).type('Aprendendo cada vez mais sobre Cypress')
+    cy.get(selectorList.AttachmentSaveButton).eq(3).click()
+    cy.get('body').should('contain', 'Successfully Saved')
   })
   it('Login - Fail', () => {
     cy.visit('/auth/login')
