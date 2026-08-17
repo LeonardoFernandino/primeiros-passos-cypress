@@ -1,15 +1,17 @@
 import userData from '../fixtures/user-data.json'
+import LoginPage from '../pages/loginPage.js'
+import DashboardPage from '../pages/dashboardPage.js'
+import MenuPage from '../pages/menuPage.js'
+
+const loginPage = new LoginPage()
+const dashboardPage = new DashboardPage()
+const menuPage = new MenuPage()
 
 describe('Orange HRM Tests', () => {
  
   const selectorList = {
-    usernameField: '[name="username"]',
-    passwordField: '[name="password"]',
-    loginButton: '[type="submit"]',
-    sectionTitleTopBar: '.oxd-topbar-header-breadcrumb-module',
-    dashboardGrid: '.orangehrm-dashboard-grid',
-    wrongCredentialAlert: '[role="alert"]',
-    myInfoButton: '[href="/web/index.php/pim/viewMyDetails"]',
+    // User
+    
     firstNameField: '[name="firstName"]',
     middleNameField: '[name="middleName"]',
     lastNameField: '[name="lastName"]',
@@ -28,19 +30,20 @@ describe('Orange HRM Tests', () => {
     AttachmentFileField: 'input[type="file"]',
     AttachmentCommentField: '.oxd-textarea',
     AttachmentSaveButton: '.oxd-button',
+    AttachmentDeleteFileField: '.bi-trash',
+    ButtonLabelDangerField: '.oxd-button--label-danger',
   }
   
   it.only('User Info Update - Success', () => {
+    loginPage.accessLoginPage()
+    loginPage.loginWithAnyUser(userData.userSuccess.username, userData.userSuccess.password)
     
-    cy.visit('/auth/login')
-    cy.get(selectorList.usernameField).type(userData.userSuccess.username)
-    cy.get(selectorList.passwordField).type(userData.userSuccess.password)
-    cy.get(selectorList.loginButton).click()
-    cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-    cy.get(selectorList.dashboardGrid)
-    
+    dashboardPage.checkDashboardPage()
+
+    menuPage.accessMyInfo()
+
     // My Info
-    cy.get(selectorList.myInfoButton).click()
+
     cy.get(selectorList.firstNameField).clear().type('PrimeiroTeste')
     cy.get(selectorList.middleNameField).clear().type('SegundoTeste')
     cy.get(selectorList.lastNameField).clear().type('TerceiroTeste')
@@ -57,7 +60,7 @@ describe('Orange HRM Tests', () => {
     cy.get(selectorList.dateCloseField).click()
     cy.get(selectorList.SaveButton).eq(0).click()
     cy.get('body').should('contain', 'Successfully Updated')
-
+    
     // Custom Fields
     cy.get(selectorList.CustomField).eq(2).click()
     cy.get('[role="option"]').contains('A-').click()
@@ -71,6 +74,8 @@ describe('Orange HRM Tests', () => {
     cy.get(selectorList.AttachmentCommentField).type('Aprendendo cada vez mais sobre Cypress')
     cy.get(selectorList.AttachmentSaveButton).eq(3).click()
     cy.get('body').should('contain', 'Successfully Saved')
+    cy.get(selectorList.AttachmentDeleteFileField).eq(0).click()
+    cy.get(selectorList.ButtonLabelDangerField).click()
   })
   it('Login - Fail', () => {
     cy.visit('/auth/login')
