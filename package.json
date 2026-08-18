@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "cypress": "^15.20.1"
+  },
+  "dependencies": {
+    "chance": "^1.1.13"
   }
 }

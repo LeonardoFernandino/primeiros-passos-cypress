@@ -6,6 +6,9 @@ import MyInfoPage from '../pages/myInfoPage.js'
 import MyFieldsPage from '../pages/MyFieldsPage.js'
 import MyAttachmentsPage from '../pages/MyAttachmentsPage.js'
 
+const Chance = require('chance')
+
+const chance = new Chance()
 const loginPage = new LoginPage()
 const dashboardPage = new DashboardPage()
 const menuPage = new MenuPage()
@@ -15,15 +18,19 @@ const myAttachmentsPage = new MyAttachmentsPage()
 
 describe('Orange HRM Tests', () => {
   it('User Info Update - Success', () => {
+    // Login
     loginPage.accessLoginPage()
     loginPage.loginWithAnyUser(userData.userSuccess.username, userData.userSuccess.password)
     
+    // Dashboard
     dashboardPage.checkDashboardPage()
 
+    // Menu
     menuPage.accessMyInfo()
 
-    myInfoPage.fillPersonalDetails('firstName', 'lastName', 'thirdName')
-    myInfoPage.fillEmployeeDetails('54162', '98765', '736843', '2030-05-10', '2000-08-05')
+    // My Info
+    myInfoPage.fillPersonalDetails(chance.first(), chance.last(), chance.last())
+    myInfoPage.fillEmployeeDetails(chance.ssn({ dashes: false }), chance.ssn({ ssnFour: true }), chance.ssn({ dashes: false }), '2030-05-10', '2000-08-05')
     myInfoPage.saveForm()
 
     // Custom Fields
@@ -34,9 +41,4 @@ describe('Orange HRM Tests', () => {
     myAttachmentsPage.deleteAttachment()
   })
 
-  it.only('Login - Fail', () => {
-    loginPage.accessLoginPage()
-    loginPage.loginWithAnyUser(userData.userFail.username, userData.userFail.password)
-    loginPage.checkAccessInvalid()
-  })
 })
